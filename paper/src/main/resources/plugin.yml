@@ -1,0 +1,20 @@
+name: ScreenShare
+version: '${version}'
+main: io.github.tdual.screenshare.paper.ScreenSharePlugin
+api-version: '26.3'
+description: Relays screen sharing between players who have the Screen Share client mod.
+author: Tdual
+commands:
+  screenshare:
+    description: List who is sharing, or stop someone's share.
+    usage: /screenshare [list|stop <player>]
+permissions:
+  screenshare.share:
+    description: Share your own screen.
+    default: true
+  screenshare.watch:
+    description: Watch shared screens.
+    default: true
+  screenshare.admin:
+    description: Stop other players' shares.
+    default: op

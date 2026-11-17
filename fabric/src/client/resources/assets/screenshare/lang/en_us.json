@@ -1,0 +1,15 @@
+{
+  "key.category.screenshare.main": "Screen Share",
+  "key.screenshare.share": "Start / stop sharing my screen",
+  "key.screenshare.view": "Show shared screen (off / small / large)",
+  "screenshare.share.started": "Sharing your screen. Press %s again to stop.",
+  "screenshare.share.stopped": "Stopped sharing your screen.",
+  "screenshare.share.failed": "Screen sharing stopped: %s",
+  "screenshare.unsupported": "This server does not have the Screen Share plugin.",
+  "screenshare.state.started": "%s started sharing their screen. Press %s to watch.",
+  "screenshare.state.stopped": "%s stopped sharing their screen.",
+  "screenshare.hud.sharing": "● Sharing screen",
+  "screenshare.hud.waiting": "Waiting for a shared screen…",
+  "screenshare.hud.label": "%s's screen",
+  "screenshare.reloaded": "Screen Share settings reloaded."
+}

@@ -1,0 +1,7 @@
+# How many people may share at the same time.
+max-sharers: 3
+# Upload limit per sharer, in kilobytes per second. Frames above it are dropped.
+# 1 fps at 1280px wide is usually 80-150 KB/s.
+max-kilobytes-per-second: 600
+# A share ends when no frame has arrived for this many seconds.
+idle-timeout-seconds: 10

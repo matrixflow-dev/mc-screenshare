@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "screenshare",
+  "version": "${version}",
+  "name": "Screen Share",
+  "description": "Share your screen with other players on the same server. Requires the Screen Share plugin on the server.",
+  "authors": ["Tdual"],
+  "contact": {"sources": "https://github.com/Tdual/mc-screenshare"},
+  "license": "MIT",
+  "environment": "client",
+  "entrypoints": {
+    "client": ["io.github.tdual.screenshare.client.ScreenShareClient"]
+  },
+  "depends": {
+    "fabricloader": ">=0.20.1",
+    "minecraft": "~26.3",
+    "java": ">=25",
+    "fabric-api": "*"
+  }
+}

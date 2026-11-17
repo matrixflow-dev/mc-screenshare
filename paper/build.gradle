@@ -1,0 +1,33 @@
+plugins {
+    id 'java'
+}
+
+group = 'io.github.tdual.screenshare'
+version = '0.1.0'
+
+repositories {
+    mavenCentral()
+    maven { url = 'https://repo.papermc.io/repository/maven-public/' }
+}
+
+dependencies {
+    compileOnly 'io.papermc.paper:paper-api:26.3.build.249-stable'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.11.4'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(25)
+}
+
+processResources {
+    def version = project.version
+    inputs.property 'version', version
+    filesMatching('plugin.yml') {
+        expand 'version': version
+    }
+}
+
+test {
+    useJUnitPlatform()
+}
