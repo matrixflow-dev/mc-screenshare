@@ -123,6 +123,9 @@ cd fabric && ./gradlew build   # fabric/build/libs/screenshare-fabric-<version>.
 cd paper  && ./gradlew build   # paper/build/libs/screenshare-paper-<version>.jar (runs the unit tests)
 ```
 
+GitHub Actions builds both on every pull request and push to `main`.
+Publishing a GitHub release tagged `v<version>` attaches both jars to it; the tag must match `version` in `fabric/gradle.properties` and `paper/build.gradle`.
+
 Self-test: start a Paper 26.3 server on `127.0.0.1:25566` with `online-mode=false`, `difficulty=peaceful`, whitelist off and the plugin installed, then run `cd fabric && ./gradlew runClient`.
 The dev run joins that server, shares a generated test pattern (`-Dscreenshare.testpattern=true`), watches itself (`-Dscreenshare.selftest=true`), saves a screenshot under `fabric/run/screenshots/` after five frames and quits.
 
