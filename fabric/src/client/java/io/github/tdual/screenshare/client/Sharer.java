@@ -1,5 +1,6 @@
 package io.github.tdual.screenshare.client;
 
+import io.github.tdual.screenshare.client.capture.CaptureSource;
 import io.github.tdual.screenshare.client.capture.ScreenCapturer;
 import io.github.tdual.screenshare.net.ControlPayload;
 import io.github.tdual.screenshare.net.FrameChunk;
@@ -14,7 +15,7 @@ import java.util.function.Consumer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.Minecraft;
 
-/** Captures the desktop on a background thread and sends each frame to the server. */
+/** Captures the chosen monitor or window on a background thread and sends each frame to the server. */
 final class Sharer {
     private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor(r -> {
         Thread t = new Thread(r, "screenshare-capture");
@@ -23,7 +24,9 @@ final class Sharer {
     });
 
     private ScheduledFuture<?> task;
-    private ScreenCapturer capturer;
+    // Set on the client thread, read on the capture thread.
+    private volatile ScreenCapturer capturer;
+    private volatile CaptureSource source;
     private int frameId;
     private int failures;
 
@@ -31,12 +34,18 @@ final class Sharer {
         return task != null;
     }
 
-    /** @param onError called on the client thread with a message for the player when sharing has to stop */
-    void start(Config config, Consumer<String> onError) {
+    /**
+     * @param capturer closed when sharing stops
+     * @param onError called on the client thread with a message for the player when sharing has to stop
+     */
+    void start(Config config, ScreenCapturer capturer, CaptureSource source, Consumer<String> onError) {
         if (task != null) {
+            capturer.close();
             return;
         }
         failures = 0;
+        this.capturer = capturer;
+        this.source = source;
         long periodMs = Math.round(1000 / config.fps);
         task = executor.scheduleWithFixedDelay(() -> captureOnce(config, onError), 0, periodMs, TimeUnit.MILLISECONDS);
     }
@@ -47,12 +56,9 @@ final class Sharer {
         }
         task.cancel(false);
         task = null;
-        executor.execute(() -> {
-            if (capturer != null) {
-                capturer.close();
-                capturer = null;
-            }
-        });
+        ScreenCapturer done = capturer;
+        capturer = null;
+        executor.execute(done::close);
         if (tellServer && ClientPlayNetworking.canSend(ControlPayload.TYPE)) {
             ClientPlayNetworking.send(new ControlPayload(ControlPayload.STOP_SHARING, ""));
         }
@@ -60,10 +66,11 @@ final class Sharer {
 
     private void captureOnce(Config config, Consumer<String> onError) {
         try {
-            if (capturer == null) {
-                capturer = ScreenCapturer.forCurrentOs(config.display);
+            ScreenCapturer current = capturer;
+            if (current == null) {
+                return; // stopped
             }
-            BufferedImage scaled = FrameEncoder.scale(capturer.capture(), config.maxWidth);
+            BufferedImage scaled = FrameEncoder.scale(current.capture(source), config.maxWidth);
             byte[] jpeg = FrameEncoder.jpeg(scaled, config.jpegQuality);
             if (jpeg.length > FrameEncoder.MAX_FRAME_BYTES) {
                 ScreenShareClient.LOG.warn("frame of {} bytes dropped; lower max_width or jpeg_quality", jpeg.length);
