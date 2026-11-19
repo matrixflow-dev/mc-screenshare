@@ -2,6 +2,8 @@ package io.github.tdual.screenshare.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.brigadier.arguments.StringArgumentType;
+import io.github.tdual.screenshare.client.capture.CaptureSource;
+import io.github.tdual.screenshare.client.capture.ScreenCapturer;
 import io.github.tdual.screenshare.net.ControlPayload;
 import io.github.tdual.screenshare.net.FrameDownPayload;
 import io.github.tdual.screenshare.net.FrameUpPayload;
@@ -76,7 +78,14 @@ public class ScreenShareClient implements ClientModInitializer {
             ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> client.execute(() -> {
                 if (client.player != null && watch(client.player.getName().getString())) {
                     overlay.setMode(ViewOverlay.Mode.LARGE);
-                    toggleSharing();
+                    ScreenCapturer capturer = ScreenCapturer.forCurrentOs();
+                    try {
+                        CaptureSource source = capturer.list().getFirst();
+                        startSharing(capturer, source, Component.literal(source.name()));
+                    } catch (Exception e) {
+                        LOG.warn("selftest could not start sharing", e);
+                        capturer.close();
+                    }
                 }
             }));
         }
@@ -95,8 +104,16 @@ public class ScreenShareClient implements ClientModInitializer {
             say(Component.translatable("screenshare.unsupported"));
             return;
         }
-        sharer.start(config, msg -> say(Component.translatable("screenshare.share.failed", msg)));
-        say(Component.translatable("screenshare.share.started", shareKey.getTranslatedKeyMessage()));
+        Minecraft.getInstance().gui.setScreen(new SourcePickerScreen(config, this::startSharing));
+    }
+
+    private void startSharing(ScreenCapturer capturer, CaptureSource source, Component label) {
+        if (!ClientPlayNetworking.canSend(FrameUpPayload.TYPE)) {
+            capturer.close(); // left the server while picking
+            return;
+        }
+        sharer.start(config, capturer, source, msg -> say(Component.translatable("screenshare.share.failed", msg)));
+        say(Component.translatable("screenshare.share.started", label, shareKey.getTranslatedKeyMessage()));
     }
 
     /** Off, then small, then large, then off again. */

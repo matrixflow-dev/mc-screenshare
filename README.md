@@ -1,7 +1,7 @@
 # mc-screenshare
 
 Share your desktop with other players on a Minecraft server.
-The sharer presses a key, and anyone who wants to watch sees that screen inside the game.
+The sharer presses a key, picks a monitor or a single window from a live preview, and anyone who wants to watch sees it inside the game.
 
 It has two parts:
 
@@ -35,10 +35,11 @@ about one frame per second, JPEG, no audio.
 
 ## How it works
 
-1. The sharer's client takes a screenshot with the OS's own tool, because Minecraft runs with `java.awt.headless=true` and `java.awt.Robot` is unavailable.
-   - macOS: `screencapture`
-   - Windows: one long-running PowerShell process using `System.Drawing`
-   - Linux: `grim` (Wayland) or ImageMagick `import` (X11)
+1. The sharer's client lists the monitors and windows and takes screenshots with the OS's own tools, because Minecraft runs with `java.awt.headless=true` and `java.awt.Robot` is unavailable.
+   - macOS: `screencapture` (`-D` for a monitor, `-l` for a window); the list comes from `osascript` (JavaScript for Automation)
+   - Windows: one long-running PowerShell process using `System.Drawing` for monitors and `PrintWindow` for windows
+   - Linux X11: ImageMagick `import`; monitors from `xrandr`, windows from `wmctrl` (optional)
+   - Linux Wayland: `grim`, whole desktop only (Wayland does not let other programs capture single windows)
 2. The image is scaled to at most 1280 px wide and encoded as JPEG.
 3. The JPEG is cut into 30,000-byte chunks, because client-to-server custom payloads are capped at 32,767 bytes.
 4. The Paper plugin checks each chunk's header and forwards the bytes, unchanged, to every player who asked to watch. It never decodes images.
@@ -77,7 +78,7 @@ Without it, macOS returns only the wallpaper.
 
 | Action | How |
 |---|---|
-| Start or stop sharing your screen | `J` |
+| Choose a monitor or window and start sharing / stop sharing | `J` |
 | Show shared screen: off → small (top right) → large (center) → off | `K` |
 | Watch a specific person | `/ss watch <name>` |
 | Stop watching | `/ss off` |
@@ -87,7 +88,11 @@ Without it, macOS returns only the wallpaper.
 
 Keys can be changed under Options → Controls → Key Binds → Screen Share.
 
-The whole monitor is shared, including notifications and other windows. Close anything private before pressing `J`.
+`J` opens a picker: monitors (yellow) and windows are listed on the left, and the selected one is previewed live on the right.
+Press **Share** (or double-click an entry) to start; nothing is sent until then.
+
+When you share a monitor, everything on it is shared, including notifications and other windows. Share a single window instead if that matters.
+A shared window is captured on its own even when other windows cover it, except on Linux X11, where overlapping windows show through. Minimized windows cannot be shared.
 
 Client settings live in `config/screenshare.properties`:
 
@@ -96,7 +101,7 @@ Client settings live in `config/screenshare.properties`:
 | `fps` | 1.0 | 0.2 – 5 |
 | `max_width` | 1280 | 320 – 1920 |
 | `jpeg_quality` | 0.6 | 0.1 – 1.0 |
-| `display` | 1 | monitor number |
+| `display` | 1 | monitor selected first in the picker; updated when you share a monitor |
 
 ## Bandwidth and cost
 
@@ -112,6 +117,7 @@ On AWS (about $0.114/GB out of Tokyo) that is around $0.05 per watcher-hour. Rai
 | Paper plugin logic | 9 unit tests (`paper/src/test`) |
 | Real desktop capture on macOS | Not yet tested (the development terminal lacked Screen Recording permission) |
 | Windows and Linux capture | Not yet tested |
+| Monitor/window picker on a real desktop (macOS, Windows, Linux) | Not yet tested; builds, and the self-test path is unchanged |
 | Two different players on the real server | Not yet tested |
 
 ## Development

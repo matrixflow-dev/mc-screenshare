@@ -1,8 +1,8 @@
 {
   "key.category.screenshare.main": "画面共有",
-  "key.screenshare.share": "自分の画面の共有を始める・やめる",
+  "key.screenshare.share": "共有する画面を選ぶ・共有をやめる",
   "key.screenshare.view": "共有された画面を表示（なし・小・大）",
-  "screenshare.share.started": "画面を共有しています。やめるときはもう一度 %s を押します。",
+  "screenshare.share.started": "%s を共有しています。やめるときはもう一度 %s を押します。",
   "screenshare.share.stopped": "画面の共有をやめました。",
   "screenshare.share.failed": "画面の共有を止めました: %s",
   "screenshare.unsupported": "このサーバーには画面共有のプラグインが入っていません。",
@@ -11,5 +11,15 @@
   "screenshare.hud.sharing": "● 画面を共有中",
   "screenshare.hud.waiting": "共有された画面を待っています…",
   "screenshare.hud.label": "%s さんの画面",
-  "screenshare.reloaded": "画面共有の設定を読み込み直しました。"
+  "screenshare.reloaded": "画面共有の設定を読み込み直しました。",
+  "screenshare.picker.title": "共有する画面かウインドウを選ぶ",
+  "screenshare.picker.share": "共有する",
+  "screenshare.picker.loading": "画面とウインドウを探しています…",
+  "screenshare.picker.failed": "画面とウインドウの一覧を取得できませんでした: %s",
+  "screenshare.picker.none": "共有できるものが見つかりませんでした。",
+  "screenshare.picker.desktop": "デスクトップ全体",
+  "screenshare.picker.display": "画面 %s",
+  "screenshare.picker.select": "左の一覧から画面かウインドウを選んでください。",
+  "screenshare.picker.preview_loading": "プレビューを読み込んでいます…",
+  "screenshare.picker.preview_failed": "プレビューできません: %s"
 }

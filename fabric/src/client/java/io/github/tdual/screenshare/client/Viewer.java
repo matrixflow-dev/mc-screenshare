@@ -141,6 +141,10 @@ final class Viewer {
         if (src == null) {
             throw new IllegalArgumentException("not an image");
         }
+        return toNativeImage(src);
+    }
+
+    static NativeImage toNativeImage(BufferedImage src) {
         int w = src.getWidth();
         int h = src.getHeight();
         int[] argb = src.getRGB(0, 0, w, h, null, 0, w);
@@ -155,7 +159,7 @@ final class Viewer {
     }
 
     /** A dynamic texture sampled with linear filtering, so a scaled-down screen stays readable. */
-    private static final class LinearTexture extends DynamicTexture {
+    static final class LinearTexture extends DynamicTexture {
         LinearTexture(NativeImage img) {
             super(() -> "screenshare view", img);
             this.sampler = com.mojang.blaze3d.systems.RenderSystem.getSamplerCache()

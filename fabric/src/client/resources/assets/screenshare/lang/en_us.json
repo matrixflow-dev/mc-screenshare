@@ -1,8 +1,8 @@
 {
   "key.category.screenshare.main": "Screen Share",
-  "key.screenshare.share": "Start / stop sharing my screen",
+  "key.screenshare.share": "Choose what to share / stop sharing",
   "key.screenshare.view": "Show shared screen (off / small / large)",
-  "screenshare.share.started": "Sharing your screen. Press %s again to stop.",
+  "screenshare.share.started": "Sharing %s. Press %s again to stop.",
   "screenshare.share.stopped": "Stopped sharing your screen.",
   "screenshare.share.failed": "Screen sharing stopped: %s",
   "screenshare.unsupported": "This server does not have the Screen Share plugin.",
@@ -11,5 +11,15 @@
   "screenshare.hud.sharing": "● Sharing screen",
   "screenshare.hud.waiting": "Waiting for a shared screen…",
   "screenshare.hud.label": "%s's screen",
-  "screenshare.reloaded": "Screen Share settings reloaded."
+  "screenshare.reloaded": "Screen Share settings reloaded.",
+  "screenshare.picker.title": "Choose a screen or window to share",
+  "screenshare.picker.share": "Share",
+  "screenshare.picker.loading": "Looking for screens and windows…",
+  "screenshare.picker.failed": "Could not list screens and windows: %s",
+  "screenshare.picker.none": "Nothing to share was found.",
+  "screenshare.picker.desktop": "Entire desktop",
+  "screenshare.picker.display": "Screen %s",
+  "screenshare.picker.select": "Select a screen or window on the left.",
+  "screenshare.picker.preview_loading": "Loading preview…",
+  "screenshare.picker.preview_failed": "Cannot preview this: %s"
 }

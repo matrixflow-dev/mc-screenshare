@@ -18,7 +18,7 @@ public final class Config {
     public int maxWidth = 1280;
     /** JPEG quality, 0.0 to 1.0. */
     public float jpegQuality = 0.6f;
-    /** Which monitor to share, starting at 1. */
+    /** Which monitor the picker selects first, starting at 1. Updated whenever a monitor is shared. */
     public int display = 1;
 
     public static Config load() {
@@ -46,7 +46,7 @@ public final class Config {
         p.setProperty("jpeg_quality", Float.toString(jpegQuality));
         p.setProperty("display", Integer.toString(display));
         try (Writer w = Files.newBufferedWriter(FILE)) {
-            p.store(w, "Screen Share settings. fps: 0.2-5, max_width: 320-1920, jpeg_quality: 0.1-1.0, display: monitor number");
+            p.store(w, "Screen Share settings. fps: 0.2-5, max_width: 320-1920, jpeg_quality: 0.1-1.0, display: monitor selected first in the picker");
         } catch (IOException e) {
             ScreenShareClient.LOG.warn("could not write {}", FILE, e);
         }
