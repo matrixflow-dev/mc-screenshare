@@ -1,1 +1,6 @@
+// Lets Gradle download a Java 25 (gradle/gradle-daemon-jvm.properties and the java toolchain) when none is installed.
+plugins {
+    id 'org.gradle.toolchains.foojay-resolver-convention' version '1.0.0'
+}
+
 rootProject.name = 'screenshare-paper'

@@ -116,7 +116,7 @@ On AWS (about $0.114/GB out of Tokyo) that is around $0.05 per watcher-hour. Rai
 
 ## Development
 
-Requires JDK 25.
+Requires Java 25. Gradle uses an installed JDK 25 if it finds one and otherwise downloads it (`gradle/gradle-daemon-jvm.properties`), so `./gradlew` works even when the default `java` is older.
 
 ```bash
 cd fabric && ./gradlew build   # fabric/build/libs/screenshare-fabric-<version>.jar
