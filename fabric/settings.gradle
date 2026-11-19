@@ -9,5 +9,10 @@ pluginManagement {
 	}
 }
 
+// Lets Gradle download a Java 25 for itself (gradle/gradle-daemon-jvm.properties) when none is installed.
+plugins {
+	id 'org.gradle.toolchains.foojay-resolver-convention' version '1.0.0'
+}
+
 // Should match your modid
 rootProject.name = 'screenshare-fabric'
